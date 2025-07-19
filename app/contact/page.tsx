@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { sendEmail } from "@/actions/sendEmail";
+import emailjs from "@emailjs/browser";
 import { Header } from "@/components/header";
 import { HeaderNavigation } from "@/components/headerNavigation";
 import { Footer } from "@/components/contactSection/footer";
@@ -48,14 +48,26 @@ export default function ContactPage() {
       message: "",
     },
   });
-
+  
   const onMyFormSubmit = async (data: z.infer<typeof formSchema>) => {
     setStatus("Loading");
-    const isSuccess = await sendEmail(data);
-    if (isSuccess) {
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          from_name: data.name,
+          from_email: data.email,
+          message: data.message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+
       form.reset();
       setStatus("Success");
-    } else {
+    } catch (err) {
+      console.error("EmailJS error", err);
       setStatus("Error");
     }
   };
@@ -65,11 +77,11 @@ export default function ContactPage() {
   ) => {
     switch (status) {
       case "Success":
-        return "Message Sent 👍";
+        return "Message Sent";
       case "Error":
         return "Something Went Wrong ❌";
       case "Loading":
-        return "Sending Message ⌛";
+        return "Sending Message ...";
       default:
         return (
           <>
@@ -100,7 +112,7 @@ export default function ContactPage() {
       <Cursor />
       <Header color="Light" />
       <HeaderNavigation />
-      <main className="darkGradient relative w-full h-full px-paddingX py-paddingY text-colorLight">
+      <main className="darkGradient relative w-full h-screen px-paddingX py-paddingY text-colorLight">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
           {/* Left */}
           <div className="flex flex-col justify-center mb-16">
