@@ -6,6 +6,7 @@ import { useAppSelector } from "@/hooks/reduxHooks";
 import { Header } from "../header";
 import { Bulge } from "../bulge";
 import { links } from "@/data/data";
+
 export function ContactSection({}) {
   const { suscribe } = useAppSelector((state) => state.fullpageReducer.third);
   const bgImagesSharedRef = useRef<gsap.core.Tween | null>(null);

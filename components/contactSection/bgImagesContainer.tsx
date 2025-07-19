@@ -91,7 +91,7 @@ const bgImagesData = [
   },
   {
     id: 15,
-    imgLink: "/svg_logo/Dasghub.jpg",
+    imgLink: "/svg_logo/Dagshub.jpg",
     title: "",
     subtitle: "",
   },
